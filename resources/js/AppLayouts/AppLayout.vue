@@ -1,4 +1,3 @@
-<!-- resources/js/Layouts/AppLayout.vue -->
 <template>
   <div class="min-h-screen bg-gray-50">
     <!-- Navigation Desktop -->
@@ -9,28 +8,28 @@
       </div>
       
       <div class="space-y-2 flex-1">
-        <a :href="route('dashboard')" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+        <a href="/" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
           <span>Dashboard</span>
         </a>
         
-        <a :href="route('projects.index')" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+        <a href="/projects" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
           </svg>
           <span>Projets</span>
         </a>
         
-        <a :href="route('tasks.index')" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+        <a href="/tasks" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
           <span>Tâches</span>
         </a>
         
-        <a :href="route('calendar')" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
+        <a href="/calendar" class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-100">
           <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -53,28 +52,27 @@
     <!-- Navigation Mobile -->
     <nav class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
       <div class="flex justify-around items-center h-16">
-        <a :href="route('dashboard')" class="flex flex-col items-center">
+        <a href="/" class="flex flex-col items-center">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
           </svg>
           <span class="text-xs mt-1">Accueil</span>
         </a>
         
-        <a :href="route('tasks.index')" class="flex flex-col items-center">
+        <a href="/tasks" class="flex flex-col items-center">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
           </svg>
           <span class="text-xs mt-1">Tâches</span>
         </a>
         
-        <!-- Bouton central pour créer -->
         <button class="relative -top-6 bg-primary-600 text-white p-4 rounded-full shadow-lg">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
           </svg>
         </button>
         
-        <a :href="route('calendar')" class="flex flex-col items-center">
+        <a href="/calendar" class="flex flex-col items-center">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
@@ -142,10 +140,35 @@
 import { ref } from 'vue'
 
 defineProps({
-  title: String,
-  subtitle: String
+  title: {
+    type: String,
+    default: 'Dashboard'
+  },
+  subtitle: {
+    type: String,
+    default: "Vue d'ensemble"
+  }
 })
 
 const showMobileMenu = ref(false)
 const showUserMenu = ref(false)
 </script>
+
+<style scoped>
+/* Styles spécifiques au composant si nécessaire */
+.active-link {
+  background-color: rgb(239 246 255); /* primary-50 */
+  color: rgb(37 99 235); /* primary-600 */
+}
+
+/* Animation pour le menu mobile */
+.mobile-menu-enter-active,
+.mobile-menu-leave-active {
+  transition: transform 0.3s ease;
+}
+
+.mobile-menu-enter-from,
+.mobile-menu-leave-to {
+  transform: translateY(100%);
+}
+</style>
