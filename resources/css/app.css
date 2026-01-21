@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Empêche le zoom sur iOS */
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+textarea {
+    font-size: 16px;
+}
+
+/* Améliore les interactions tactiles */
+button, a, [role="button"] {
+    @apply active:scale-95 transition-transform;
+}
+
+/* Styles personnalisés */
+@layer components {
+    .btn-primary {
+        @apply bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 
+               transition-colors font-medium;
+    }
+    
+    .btn-secondary {
+        @apply bg-gray-200 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-300 
+               transition-colors font-medium;
+    }
+    
+    .card {
+        @apply bg-white rounded-xl shadow-sm border border-gray-200 p-6;
+    }
+    
+    .input-field {
+        @apply w-full border border-gray-300 rounded-lg px-4 py-2.5 
+               focus:ring-2 focus:ring-primary-500 focus:border-transparent 
+               outline-none transition-colors;
+    }
+    
+    .badge {
+        @apply px-3 py-1 rounded-full text-sm font-medium;
+    }
+    
+    .badge-primary {
+        @apply bg-primary-100 text-primary-800;
+    }
+    
+    .badge-success {
+        @apply bg-green-100 text-green-800;
+    }
+    
+    .badge-warning {
+        @apply bg-yellow-100 text-yellow-800;
+    }
+    
+    .badge-danger {
+        @apply bg-red-100 text-red-800;
+    }
+}
