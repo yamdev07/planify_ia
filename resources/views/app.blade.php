@@ -1,71 +1,21 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title inertia>{{ config('app.name', 'Planif IA') }}</title>
-    
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700&display=swap" rel="stylesheet" />
-    
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <!-- Routes minimales pour Inertia -->
-    <script>
-        window.Ziggy = {
-            url: '{{ config('app.url', 'http://localhost:8000') }}',
-            port: null,
-            defaults: {},
-            routes: {
-                'dashboard': { 
-                    uri: '/', 
-                    methods: ['GET', 'HEAD'],
-                    parameters: []
-                },
-                'projects.index': { 
-                    uri: '/projects', 
-                    methods: ['GET', 'HEAD'],
-                    parameters: []
-                },
-                'tasks.index': { 
-                    uri: '/tasks', 
-                    methods: ['GET', 'HEAD'],
-                    parameters: []
-                },
-                'calendar': { 
-                    uri: '/calendar', 
-                    methods: ['GET', 'HEAD'],
-                    parameters: []
-                }
-            }
-        };
-        
-        // Fonction route() simple
-        window.route = function(name, params = {}, absolute = false) {
-            const route = window.Ziggy.routes[name];
-            if (!route) return '/';
-            
-            let url = route.uri;
-            
-            // Remplace les paramètres
-            if (params) {
-                Object.keys(params).forEach(key => {
-                    url = url.replace(`{${key}}`, params[key]);
-                    url = url.replace(`:${key}`, params[key]);
-                });
-            }
-            
-            if (absolute) {
-                return window.Ziggy.url + url;
-            }
-            
-            return url;
-        };
-    </script>
-    
-    @inertiaHead
-</head>
-<body class="font-sans antialiased bg-gray-50">
-    @inertia
-</body>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title inertia>{{ config('app.name', 'Laravel') }}</title>
+
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+        <!-- Scripts -->
+        @routes
+        @vite(['resources/js/app.js', "resources/js/Pages/{$page['component']}.vue"])
+        @inertiaHead
+    </head>
+    <body class="font-sans antialiased">
+        @inertia
+    </body>
 </html>
