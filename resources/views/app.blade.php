@@ -6,6 +6,11 @@
 
         <title inertia>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Dark mode anti-flash -->
+        <script>
+            (function(){var t=localStorage.getItem('planify-theme'),p=window.matchMedia('(prefers-color-scheme: dark)').matches;if(t==='dark'||(!t&&p))document.documentElement.classList.add('dark');})();
+        </script>
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
