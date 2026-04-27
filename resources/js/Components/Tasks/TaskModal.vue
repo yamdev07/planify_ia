@@ -1,21 +1,33 @@
 <template>
   <Teleport to="body">
     <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-      <div class="absolute inset-0 bg-black/60 backdrop-blur-sm" @click="$emit('close')" />
-      <div class="relative bg-gray-800 border border-gray-700 rounded-xl shadow-2xl w-full max-w-md z-10">
+      <div class="absolute inset-0 bg-black/40 dark:bg-black/60 backdrop-blur-sm" @click="$emit('close')" />
 
-        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700">
-          <h3 class="text-base font-semibold text-white">{{ task ? 'Modifier la tâche' : 'Nouvelle tâche' }}</h3>
-          <button @click="$emit('close')" class="text-gray-400 hover:text-white text-xl leading-none">&times;</button>
+      <div class="relative bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl w-full max-w-md z-10">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100 dark:border-gray-800">
+          <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+            {{ task ? 'Modifier la tâche' : 'Nouvelle tâche' }}
+          </h3>
+          <button
+            @click="$emit('close')"
+            class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 transition-colors p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
         </div>
 
-        <form @submit.prevent="save" class="px-6 py-4 space-y-4">
+        <!-- Form -->
+        <form @submit.prevent="save" class="px-6 py-5 space-y-4">
           <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1">Titre *</label>
+            <label class="label">Titre *</label>
             <input
               v-model="form.title"
               type="text"
-              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500"
+              class="input"
               placeholder="Nom de la tâche"
               required
               autofocus
@@ -23,19 +35,19 @@
           </div>
 
           <div>
-            <label class="block text-xs font-medium text-gray-400 mb-1">Description</label>
+            <label class="label">Description</label>
             <textarea
               v-model="form.description"
               rows="2"
-              class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 resize-none"
+              class="input resize-none"
               placeholder="Détails optionnels…"
             />
           </div>
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Priorité</label>
-              <select v-model="form.priority" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <label class="label">Priorité</label>
+              <select v-model="form.priority" class="select">
                 <option value="low">Faible</option>
                 <option value="medium">Moyenne</option>
                 <option value="high">Haute</option>
@@ -43,8 +55,8 @@
               </select>
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Statut</label>
-              <select v-model="form.status" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <label class="label">Statut</label>
+              <select v-model="form.status" class="select">
                 <option value="todo">À faire</option>
                 <option value="in_progress">En cours</option>
                 <option value="done">Terminé</option>
@@ -54,21 +66,17 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Date planifiée</label>
-              <input
-                v-model="form.scheduled_at"
-                type="datetime-local"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
-              />
+              <label class="label">Date planifiée</label>
+              <input v-model="form.scheduled_at" type="datetime-local" class="input" />
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Durée (min)</label>
+              <label class="label">Durée (min)</label>
               <input
                 v-model.number="form.duration_minutes"
                 type="number"
                 min="5"
                 step="5"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500"
+                class="input"
                 placeholder="30"
               />
             </div>
@@ -76,36 +84,36 @@
 
           <div class="grid grid-cols-2 gap-3">
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Objectif</label>
-              <select v-model="form.goal_id" class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500">
+              <label class="label">Objectif</label>
+              <select v-model="form.goal_id" class="select">
                 <option :value="null">Aucun</option>
                 <option v-for="g in goals" :key="g.id" :value="g.id">{{ g.title }}</option>
               </select>
             </div>
             <div>
-              <label class="block text-xs font-medium text-gray-400 mb-1">Catégorie</label>
+              <label class="label">Catégorie</label>
               <input
                 v-model="form.category"
                 type="text"
-                class="w-full bg-gray-700 border border-gray-600 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-400 focus:outline-none focus:border-indigo-500"
+                class="input"
                 placeholder="Ex: Travail"
               />
             </div>
           </div>
 
+          <!-- Validation errors -->
+          <div v-if="errors.length" class="p-3 bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800 rounded-lg">
+            <p v-for="e in errors" :key="e" class="text-xs text-red-600 dark:text-red-400">{{ e }}</p>
+          </div>
+
+          <!-- Actions -->
           <div class="flex gap-3 pt-2">
-            <button
-              type="submit"
-              :disabled="saving"
-              class="flex-1 py-2 px-4 bg-indigo-600 hover:bg-indigo-500 disabled:opacity-50 text-white text-sm font-medium rounded-lg transition-colors"
-            >
+            <button type="submit" :disabled="saving" class="btn-primary flex-1 justify-center">
               {{ saving ? 'Enregistrement…' : (task ? 'Mettre à jour' : 'Créer') }}
             </button>
-            <button
-              type="button"
-              @click="$emit('close')"
-              class="py-2 px-4 bg-gray-700 hover:bg-gray-600 text-gray-200 text-sm font-medium rounded-lg transition-colors"
-            >Annuler</button>
+            <button type="button" @click="$emit('close')" class="btn-secondary">
+              Annuler
+            </button>
           </div>
         </form>
       </div>
@@ -118,14 +126,15 @@ import { ref, reactive, watch, onMounted } from 'vue'
 import axios from 'axios'
 
 const props = defineProps({
-  task:     { type: Object, default: null },
-  prefill:  { type: Object, default: () => ({}) },
+  task:    { type: Object, default: null },
+  prefill: { type: Object, default: () => ({}) },
 })
 
 const emit = defineEmits(['saved', 'close'])
 
 const saving = ref(false)
 const goals  = ref([])
+const errors = ref([])
 
 const form = reactive({
   title:            '',
@@ -155,6 +164,7 @@ watch(() => props.task, (t) => {
 
 watch(() => props.prefill, (p) => {
   if (p?.scheduled_at) form.scheduled_at = p.scheduled_at.slice(0, 16)
+  if (p?.goal_id)      form.goal_id      = p.goal_id
 }, { immediate: true })
 
 onMounted(async () => {
@@ -164,12 +174,20 @@ onMounted(async () => {
 
 async function save() {
   saving.value = true
+  errors.value = []
   try {
     const payload = { ...form, goal_id: form.goal_id || null, scheduled_at: form.scheduled_at || null }
     const { data } = props.task
       ? await axios.patch(`/api/v1/tasks/${props.task.id}`, payload)
       : await axios.post('/api/v1/tasks', payload)
     emit('saved', data)
+  } catch (e) {
+    const errs = e.response?.data?.errors
+    if (errs) {
+      errors.value = Object.values(errs).flat()
+    } else {
+      errors.value = [e.response?.data?.message ?? 'Une erreur est survenue']
+    }
   } finally {
     saving.value = false
   }

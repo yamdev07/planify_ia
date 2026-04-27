@@ -1,25 +1,29 @@
 <template>
   <AppLayout>
-    <!-- Header bar -->
+
+    <!-- Page header -->
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-xl font-bold text-white">Tâches</h2>
-      <button
-        @click="openCreate"
-        class="flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-medium rounded-lg transition-colors"
-      >
-        <span class="text-lg leading-none">+</span> Nouvelle tâche
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Tâches</h2>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{{ tasks.length }} tâche{{ tasks.length !== 1 ? 's' : '' }}</p>
+      </div>
+      <button @click="openCreate" class="btn-primary">
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        Nouvelle tâche
       </button>
     </div>
 
     <!-- Filters -->
-    <div class="flex flex-wrap gap-3 mb-6">
-      <select v-model="filters.status" @change="load" class="filter-select">
+    <div class="card p-3 mb-5 flex flex-wrap gap-2 items-center">
+      <select v-model="filters.status" @change="load" class="select !w-auto text-xs py-1.5">
         <option value="">Tous les statuts</option>
         <option value="todo">À faire</option>
         <option value="in_progress">En cours</option>
         <option value="done">Terminé</option>
       </select>
-      <select v-model="filters.priority" @change="load" class="filter-select">
+      <select v-model="filters.priority" @change="load" class="select !w-auto text-xs py-1.5">
         <option value="">Toutes priorités</option>
         <option value="urgent">Urgente</option>
         <option value="high">Haute</option>
@@ -30,72 +34,115 @@
         v-model="filters.category"
         @input="load"
         type="text"
-        class="filter-select"
+        class="input !w-40 text-xs py-1.5"
         placeholder="Catégorie…"
       />
-      <button v-if="hasFilters" @click="clearFilters" class="text-xs text-gray-400 hover:text-white transition-colors px-2">
-        ✕ Effacer filtres
+      <button
+        v-if="hasFilters"
+        @click="clearFilters"
+        class="flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors px-2 py-1.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800"
+      >
+        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+        </svg>
+        Effacer filtres
       </button>
     </div>
 
-    <!-- Task list grouped by goal -->
-    <div v-if="loading" class="text-center py-16 text-gray-500">Chargement…</div>
-
-    <div v-else-if="tasks.length === 0" class="text-center py-16">
-      <p class="text-gray-500 text-sm">Aucune tâche trouvée</p>
-      <button @click="openCreate" class="mt-3 text-indigo-400 hover:text-indigo-300 text-sm">Créer la première tâche →</button>
+    <!-- Loading skeleton -->
+    <div v-if="loading" class="space-y-2">
+      <div v-for="i in 5" :key="i" class="card p-4 flex items-center gap-4">
+        <div class="w-5 h-5 rounded-full bg-gray-100 dark:bg-gray-800 animate-pulse shrink-0" />
+        <div class="flex-1 space-y-2">
+          <div class="h-4 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-2/3" />
+          <div class="h-3 bg-gray-100 dark:bg-gray-800 rounded animate-pulse w-1/3" />
+        </div>
+      </div>
     </div>
 
-    <div v-else class="space-y-3">
+    <!-- Empty state -->
+    <div v-else-if="tasks.length === 0" class="card p-12 flex flex-col items-center justify-center text-center">
+      <div class="w-14 h-14 rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+      </div>
+      <p class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Aucune tâche trouvée</p>
+      <p class="text-xs text-gray-400 dark:text-gray-500 mb-4">Créez votre première tâche pour commencer</p>
+      <button @click="openCreate" class="btn-primary text-xs">
+        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/>
+        </svg>
+        Créer une tâche
+      </button>
+    </div>
+
+    <!-- Task list -->
+    <div v-else class="space-y-2">
       <div
         v-for="task in tasks"
         :key="task.id"
-        class="flex items-center gap-4 p-4 bg-gray-800 rounded-xl border border-gray-700 hover:border-gray-600 transition-all group"
+        class="card px-4 py-3 flex items-center gap-4 hover:shadow-md transition-shadow group"
       >
-        <!-- Completion toggle -->
+        <!-- Checkbox -->
         <button
           @click="toggleDone(task)"
-          class="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all"
+          class="w-5 h-5 rounded-full border-2 shrink-0 flex items-center justify-center transition-all duration-150"
           :class="task.status === 'done'
-            ? 'border-emerald-500 bg-emerald-500 text-white'
-            : 'border-gray-500 hover:border-emerald-400'"
+            ? 'border-emerald-500 bg-emerald-500'
+            : 'border-gray-300 dark:border-gray-600 hover:border-emerald-400'"
         >
-          <span v-if="task.status === 'done'" class="text-xs leading-none">✓</span>
+          <svg v-if="task.status === 'done'" class="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5"/>
+          </svg>
         </button>
 
-        <!-- Info -->
+        <!-- Content -->
         <div class="flex-1 min-w-0">
           <p
-            class="text-sm font-medium text-white truncate"
-            :class="task.status === 'done' ? 'line-through text-gray-500' : ''"
+            class="text-sm font-medium truncate transition-colors"
+            :class="task.status === 'done'
+              ? 'line-through text-gray-400 dark:text-gray-500'
+              : 'text-gray-900 dark:text-white'"
           >{{ task.title }}</p>
-          <div class="flex items-center gap-2 mt-0.5">
-            <span class="text-xs px-1.5 py-0.5 rounded" :class="priorityClass(task.priority)">
+          <div class="flex items-center flex-wrap gap-x-2 gap-y-0.5 mt-1">
+            <span class="badge text-[11px] font-medium" :class="priorityClass(task.priority)">
               {{ priorityLabel(task.priority) }}
             </span>
-            <span v-if="task.goal" class="text-xs text-gray-400">{{ task.goal.title }}</span>
-            <span v-if="task.category" class="text-xs text-gray-500">· {{ task.category }}</span>
-            <span v-if="task.scheduled_at" class="text-xs text-gray-500">
-              · {{ fmtDate(task.scheduled_at) }}
-            </span>
+            <span v-if="task.goal" class="text-[11px] text-gray-400 dark:text-gray-500">{{ task.goal.title }}</span>
+            <span v-if="task.category" class="text-[11px] text-gray-400 dark:text-gray-500">· {{ task.category }}</span>
+            <span v-if="task.scheduled_at" class="text-[11px] text-gray-400 dark:text-gray-500">· {{ fmtDate(task.scheduled_at) }}</span>
           </div>
         </div>
 
-        <!-- Goal progress bar -->
-        <div v-if="task.goal" class="hidden md:block w-24">
-          <div class="h-1 bg-gray-700 rounded-full overflow-hidden">
-            <div
-              class="h-full bg-indigo-500 rounded-full transition-all"
-              :style="{ width: goalProgress(task.goal_id) + '%' }"
-            />
+        <!-- Goal progress -->
+        <div v-if="task.goal" class="hidden md:flex flex-col gap-1 w-20 shrink-0">
+          <div class="h-1 bg-gray-100 dark:bg-gray-800 rounded-full overflow-hidden">
+            <div class="h-full bg-indigo-500 rounded-full" :style="{ width: goalProgress(task.goal_id) + '%' }" />
           </div>
-          <p class="text-xs text-gray-500 mt-0.5 text-right">{{ goalProgress(task.goal_id) }}%</p>
+          <p class="text-[10px] text-gray-400 dark:text-gray-500 text-right">{{ goalProgress(task.goal_id) }}%</p>
         </div>
 
         <!-- Actions -->
         <div class="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-          <button @click="openEdit(task)" class="p-1.5 rounded hover:bg-gray-700 text-gray-400 hover:text-white text-xs">✎</button>
-          <button @click="deleteTask(task)" class="p-1.5 rounded hover:bg-red-900/40 text-gray-400 hover:text-red-400 text-xs">✕</button>
+          <button
+            @click="openEdit(task)"
+            class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+            title="Modifier"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125"/>
+            </svg>
+          </button>
+          <button
+            @click="deleteTask(task)"
+            class="p-1.5 rounded-lg hover:bg-red-50 dark:hover:bg-red-950/40 text-gray-400 hover:text-red-500 transition-colors"
+            title="Supprimer"
+          >
+            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
+            </svg>
+          </button>
         </div>
       </div>
     </div>
@@ -124,7 +171,7 @@ const loading     = ref(true)
 const showModal   = ref(false)
 const editingTask = ref(null)
 
-const filters = reactive({ status: '', priority: '', category: '' })
+const filters    = reactive({ status: '', priority: '', category: '' })
 const hasFilters = computed(() => filters.status || filters.priority || filters.category)
 
 async function load() {
@@ -136,11 +183,8 @@ async function load() {
     ])
     tasks.value = tasksRes.data
     goals.value = goalsRes.data
-  } catch {
-    error('Erreur de chargement')
-  } finally {
-    loading.value = false
-  }
+  } catch { error('Erreur de chargement') }
+  finally { loading.value = false }
 }
 
 function clearFilters() {
@@ -165,7 +209,7 @@ async function toggleDone(task) {
   try {
     const { data } = await axios.patch(`/api/v1/tasks/${task.id}`, { status: newStatus })
     Object.assign(task, data)
-    success(newStatus === 'done' ? 'Tâche complétée ✓' : 'Tâche réouverte')
+    success(newStatus === 'done' ? 'Tâche complétée' : 'Tâche réouverte')
   } catch { error('Erreur') }
 }
 
@@ -190,11 +234,11 @@ function priorityLabel(p) {
 
 function priorityClass(p) {
   return {
-    urgent: 'bg-red-500/20 text-red-300',
-    high:   'bg-orange-500/20 text-orange-300',
-    medium: 'bg-blue-500/20 text-blue-300',
-    low:    'bg-gray-500/20 text-gray-400',
-  }[p] ?? 'bg-gray-500/20 text-gray-400'
+    urgent: 'bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-400',
+    high:   'bg-orange-50 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400',
+    medium: 'bg-indigo-50 dark:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400',
+    low:    'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400',
+  }[p] ?? 'bg-gray-100 dark:bg-gray-800 text-gray-500'
 }
 
 function fmtDate(d) {
@@ -204,9 +248,3 @@ function fmtDate(d) {
 onMounted(load)
 </script>
 
-<style scoped>
-.filter-select {
-  @apply bg-gray-800 border border-gray-700 rounded-lg px-3 py-1.5 text-sm text-gray-300
-         focus:outline-none focus:border-indigo-500 transition-colors;
-}
-</style>
